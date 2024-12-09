@@ -2,6 +2,8 @@ import Question from "./Question.jsx";
 import {useState, useCallback} from "react";
 import questions from "../questions.js";
 import Answers from "./Answers.jsx";
+import Summary from "./Summary.jsx";
+import {correctAnswers} from "../contexts/QuizContextProvider.jsx";
 
 const INITIAL_TIMER = 6000;
 
@@ -70,7 +72,7 @@ export default function Quiz() {
               <button onClick={handleNextQuestion}>Skip</button>
             </div>
           </> :
-          undefined
+          <Summary answers={quizState.answers} />
       }
     </section>
   );
