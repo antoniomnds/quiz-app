@@ -1,4 +1,4 @@
-import {useState, createContext, useCallback} from "react";
+import {useReducer, createContext, useCallback} from "react";
 
 const INITIAL_TIMER = 6000;
 
@@ -14,47 +14,67 @@ export const QuizContext = createContext({
   nextQuestion: () => {},
 });
 
+function quizReducer(state, action) {
+  if (action.type === 'SELECT_ANSWER') {
+    const newAnswers = [...state.answers];
+    newAnswers[state.currentQuestion] = action.payload.idx;
+
+    return {
+      ...state,
+      answers: newAnswers,
+      state: 'selected',
+      timer: 1000,
+    }
+  } else if (action.type === 'CHECK_ANSWER') {
+    return {
+      ...state,
+      state: 'check-answer',
+      timer: 2000
+    }
+  } else if (action.type === 'NEXT_QUESTION') {
+    // noinspection JSPrimitiveTypeWrapperUsage
+    return {
+      ...state,
+      currentQuestion: state.currentQuestion + 1,
+      state: 'not-selected',
+      timer: new Number(INITIAL_TIMER) // to trigger a re-render of the progress bar
+    }
+  }
+
+  return state;
+}
+
 export default function QuizContextProvider({children}) {
-  const [quizState, setQuizState] = useState({
-    currentQuestion: 0,
-    answers: new Array(correctAnswers.length).fill(null),
-    state: 'not-selected',
-    timer: INITIAL_TIMER,
-  });
+  const [quizState, quizDispatch] = useReducer(
+    quizReducer,
+    {
+      currentQuestion: 0,
+      answers: new Array(correctAnswers.length).fill(null),
+      state: 'not-selected',
+      timer: INITIAL_TIMER,
+    }
+  );
 
   function handleSelectAnswer(idx) {
-    setQuizState(prevState => {
-      const newAnswers = [...prevState.answers];
-      newAnswers[prevState.currentQuestion] = idx;
-
-      return {
-        ...prevState,
-        answers: newAnswers,
-        state: 'selected',
-        timer: 1000,
+    quizDispatch({
+      type: 'SELECT_ANSWER',
+      payload: {
+        idx
       }
     });
   }
 
   const handleCheckAnswer = useCallback(
     function handleCheckAnswer() {
-      setQuizState(prevState => {
-        return {
-          ...prevState,
-          state: 'check-answer',
-          timer: 2000
-        }
-      });
+      quizDispatch({
+        type: 'CHECK_ANSWER'
+      })
     }, []);
 
   const handleNextQuestion = useCallback(function handleNextQuestion() {
-    // noinspection JSPrimitiveTypeWrapperUsage
-    setQuizState(prevState => ({
-      ...prevState,
-      currentQuestion: prevState.currentQuestion + 1,
-      state: 'not-selected',
-      timer: new Number(INITIAL_TIMER) // to trigger a re-render of the progress bar
-    }));
+    quizDispatch({
+      type: 'NEXT_QUESTION'
+    })
   }, []);
 
   const ctxValue = {
