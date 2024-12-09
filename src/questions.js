@@ -1,3 +1,4 @@
+// The correct answer is always the first and that is assumed in the app.
 export default [
   {
     id: 'q1',

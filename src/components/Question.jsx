@@ -1,7 +1,8 @@
 import ProgressBar from "./ProgressBar.jsx";
 import {useEffect, useContext} from "react";
 import {QuizContext} from "../contexts/QuizContextProvider.jsx";
-import questions from "../questions.js";
+import QUESTIONS from "../questions.js";
+import Answers from "./Answers.jsx";
 
 export default function Question() {
   const {currentQuestion, timer, state, checkAnswer, nextQuestion} = useContext(QuizContext)
@@ -23,7 +24,11 @@ export default function Question() {
   return (
     <div id="question">
       <ProgressBar />
-      <h2>{questions[currentQuestion].text}</h2>
+      <h2>{QUESTIONS[currentQuestion].text}</h2>
+      <Answers />
+      <div id="skip-action">
+        <button onClick={nextQuestion}>Skip</button>
+      </div>
     </div>
   );
 }

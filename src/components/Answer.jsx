@@ -1,21 +1,22 @@
 import {useContext, useEffect, useState} from "react";
-import {correctAnswers, QuizContext} from "../contexts/QuizContextProvider.jsx";
+import {QuizContext} from "../contexts/QuizContextProvider.jsx";
+import QUESTIONS from "../questions.js";
 
-export default function Answer({answerText, idx}) {
-  const {currentQuestion, answers, state, selectAnswer} = useContext(QuizContext);
+export default function Answer({answerText}) {
+  const {currentQuestion, userAnswers, state, selectAnswer} = useContext(QuizContext);
   const [highlight, setHighlight] = useState(undefined);
 
   function handleClick() {
-    if (answers[currentQuestion] !== null || state !== 'not-selected') {
+    if (userAnswers[currentQuestion] !== null || state !== 'not-selected') {
       return; // question already answered
     }
     setHighlight(null);
-    selectAnswer(idx);
+    selectAnswer(answerText);
   }
 
   useEffect(() => {
-    if (state === 'check-answer' && idx === answers[currentQuestion]) {
-      if (idx === correctAnswers[currentQuestion]) {
+    if (state === 'check-answer' && answerText === userAnswers[currentQuestion]) {
+      if (answerText === QUESTIONS[currentQuestion].answers[0]) {
         setHighlight(true);
       } else  {
         setHighlight(false);

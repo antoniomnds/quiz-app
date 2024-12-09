@@ -1,12 +1,11 @@
 import {useReducer, createContext, useCallback} from "react";
+import QUESTIONS from "../questions.js";
 
 const INITIAL_TIMER = 6000;
 
-export const correctAnswers = [0, 0, 0, 0, 0, 0, 0];
-
 export const QuizContext = createContext({
   currentQuestion: 0,
-  answers: [],
+  userAnswers: [],
   state: 'not-selected',
   timer: INITIAL_TIMER,
   selectAnswer: () => {},
@@ -16,12 +15,12 @@ export const QuizContext = createContext({
 
 function quizReducer(state, action) {
   if (action.type === 'SELECT_ANSWER') {
-    const newAnswers = [...state.answers];
-    newAnswers[state.currentQuestion] = action.payload.idx;
+    const newAnswers = [...state.userAnswers];
+    newAnswers[state.currentQuestion] = action.payload.selectedAnswer;
 
     return {
       ...state,
-      answers: newAnswers,
+      userAnswers: newAnswers,
       state: 'selected',
       timer: 1000,
     }
@@ -49,17 +48,17 @@ export default function QuizContextProvider({children}) {
     quizReducer,
     {
       currentQuestion: 0,
-      answers: new Array(correctAnswers.length).fill(null),
+      userAnswers: new Array(QUESTIONS.length).fill(null),
       state: 'not-selected',
       timer: INITIAL_TIMER,
     }
   );
 
-  function handleSelectAnswer(idx) {
+  function handleSelectAnswer(selectedAnswer) {
     quizDispatch({
       type: 'SELECT_ANSWER',
       payload: {
-        idx
+        selectedAnswer
       }
     });
   }
@@ -79,13 +78,14 @@ export default function QuizContextProvider({children}) {
 
   const ctxValue = {
     currentQuestion: quizState.currentQuestion,
-    answers: quizState.answers,
+    userAnswers: quizState.userAnswers,
     state: quizState.state,
     timer: quizState.timer,
     selectAnswer: handleSelectAnswer,
     checkAnswer: handleCheckAnswer,
     nextQuestion: handleNextQuestion
   }
+
   return (
     <QuizContext.Provider value={ctxValue}>
       {children}
