@@ -6,7 +6,7 @@ export default function Answer({answerText, idx}) {
   const [highlight, setHighlight] = useState(undefined);
 
   function handleClick() {
-    if (answers[currentQuestion] !== null) {
+    if (answers[currentQuestion] !== null || state !== 'not-selected') {
       return; // question already answered
     }
     setHighlight(null);
