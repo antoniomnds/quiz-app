@@ -8,7 +8,7 @@ const INITIAL_TIMER = 6000;
 export default function Quiz() {
   const [quizState, setQuizState] = useState({
     currentQuestion: 0,
-    answers: [],
+    answers: new Array(correctAnswers.length).fill(null),
     state: 'not-selected',
     timer: INITIAL_TIMER,
   });
