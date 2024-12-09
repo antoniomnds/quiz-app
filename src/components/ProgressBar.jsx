@@ -1,6 +1,8 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
+import {QuizContext} from "../contexts/QuizContextProvider.jsx";
 
-export default function ProgressBar({timer, state}) {
+export default function ProgressBar() {
+  const {timer, state} = useContext(QuizContext);
   const [remainingTime, setRemainingTime] = useState(timer);
 
   useEffect(() => {

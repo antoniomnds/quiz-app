@@ -1,25 +1,29 @@
 import ProgressBar from "./ProgressBar.jsx";
-import {useEffect} from "react";
+import {useEffect, useContext} from "react";
+import {QuizContext} from "../contexts/QuizContextProvider.jsx";
+import questions from "../questions.js";
 
-export default function Question({questionText, timer, state, onCheckAnswer, onNextQuestion}) {
+export default function Question() {
+  const {currentQuestion, timer, state, checkAnswer, nextQuestion} = useContext(QuizContext)
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (state === 'check-answer') {
-        onNextQuestion();
+        nextQuestion();
       } else { // not-selected and timed out or selected
-        onCheckAnswer();
+        checkAnswer();
       }
     }, timer);
 
     return () => {
       clearTimeout(timeout);
     }
-  }, [state, timer, onCheckAnswer, onNextQuestion]);
+  }, [state, timer, checkAnswer, nextQuestion]);
 
   return (
     <div id="question">
-      <ProgressBar timer={timer} state={state} />
-      <h2>{questionText}</h2>
+      <ProgressBar />
+      <h2>{questions[currentQuestion].text}</h2>
     </div>
   );
 }

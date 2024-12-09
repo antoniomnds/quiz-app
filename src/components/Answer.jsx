@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
-import {correctAnswers} from "../contexts/QuizContextProvider.jsx";
+import {useContext, useEffect, useState} from "react";
+import {correctAnswers, QuizContext} from "../contexts/QuizContextProvider.jsx";
 
-export default function Answer({answerText, idx, onSelect, answers, currentQuestion, state}) {
+export default function Answer({answerText, idx}) {
+  const {currentQuestion, answers, state, selectAnswer} = useContext(QuizContext);
   const [highlight, setHighlight] = useState(undefined);
 
   function handleClick() {
@@ -9,7 +10,7 @@ export default function Answer({answerText, idx, onSelect, answers, currentQuest
       return; // question already answered
     }
     setHighlight(null);
-    onSelect(idx);
+    selectAnswer(idx);
   }
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import quizCompleteImg from '../assets/quiz-complete.png'
-import {correctAnswers} from "../contexts/QuizContextProvider.jsx";
+import {correctAnswers, QuizContext} from "../contexts/QuizContextProvider.jsx";
 import questions from "../questions.js";
+import {useContext} from "react";
 
 function toPercentage(ratio) {
   return `${(ratio * 100).toFixed(0)}%`;
@@ -28,7 +29,8 @@ function derivePercentages(answers) {
   return [skippedPercentage, correctPercentage, wrongPercentage];
 }
 
-export default function Summary({answers}) {
+export default function Summary() {
+  const {answers} = useContext(QuizContext);
   const [skipped, correct, wrong] = derivePercentages(answers);
 
   return (
