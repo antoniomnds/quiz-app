@@ -7,12 +7,13 @@ import {QuizContext} from "../contexts/QuizContextProvider.jsx";
 export default function Quiz() {
   const {currentQuestion} = useContext(QuizContext);
 
+  if (currentQuestion === QUESTIONS.length) {
+    return <Summary />;
+  }
+
   return (
-    <main id="quiz">
-      {
-        currentQuestion < QUESTIONS.length ?
-          <Question /> : <Summary />
-      }
-    </main>
+    <div id="quiz">
+      <Question />
+    </div>
   );
 }

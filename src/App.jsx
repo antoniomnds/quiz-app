@@ -3,9 +3,11 @@ import QuizContextProvider from "./contexts/QuizContextProvider.jsx";
 
 function App() {
   return (
-    <QuizContextProvider>
-      <Quiz />
-    </QuizContextProvider>
+    <main>
+      <QuizContextProvider>
+        <Quiz />
+      </QuizContextProvider>
+    </main>
   );
 }
 
