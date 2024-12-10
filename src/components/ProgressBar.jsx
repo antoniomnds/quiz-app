@@ -22,7 +22,7 @@ export default function ProgressBar() {
 
   return (
     <progress
-      className={state === 'answered' ? 'answered' : undefined}
+      className={state === 'check-answer' ? 'answered' : undefined}
       value={remainingTime}
       max={timer}
     />
