@@ -23,9 +23,9 @@ export default function Question() {
 
   return (
     <div id="question">
-      <ProgressBar />
+      <ProgressBar key={timer} />
       <h2>{QUESTIONS[currentQuestion].text}</h2>
-      <Answers />
+      <Answers key={currentQuestion} />
       <div id="skip-action">
         <button onClick={nextQuestion}>Skip</button>
       </div>

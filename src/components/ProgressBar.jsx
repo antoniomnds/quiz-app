@@ -6,7 +6,6 @@ export default function ProgressBar() {
   const [remainingTime, setRemainingTime] = useState(timer);
 
   useEffect(() => {
-    setRemainingTime(timer);
     const interval =
       setInterval(
         () => {
@@ -18,7 +17,7 @@ export default function ProgressBar() {
     return () => {
       clearInterval(interval);
     }
-  }, [timer]);
+  }, []);
 
   return (
     <progress
