@@ -1,19 +1,33 @@
 import Question from "./Question.jsx";
-import {useContext} from "react";
+import {useState, useCallback} from "react";
 import QUESTIONS from "../questions.js";
 import Summary from "./Summary.jsx";
-import {QuizContext} from "../contexts/QuizContextProvider.jsx";
 
 export default function Quiz() {
-  const {currentQuestion} = useContext(QuizContext);
+  const [userAnswers, setUserAnswers] = useState([]);
 
-  if (currentQuestion === QUESTIONS.length) {
-    return <Summary />;
+  const activeQuestionIdx = userAnswers.length;
+
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(selectedAnswer) {
+    setUserAnswers(prevAnswers => [...prevAnswers, selectedAnswer]);
+  }, []);
+
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null)
+    , [handleSelectAnswer]
+  );
+
+  if (activeQuestionIdx === QUESTIONS.length) { // quiz is complete
+    return <Summary userAnswers={userAnswers}/>;
   }
 
   return (
     <div id="quiz">
-      <Question />
+      <Question
+        key={activeQuestionIdx}
+        activeQuestionIdx={activeQuestionIdx}
+        onSkipAnswer={handleSkipAnswer}
+        onSelectAnswer={handleSelectAnswer}/>
     </div>
   );
 }

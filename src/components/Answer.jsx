@@ -1,41 +1,25 @@
-import {useContext, useEffect, useState} from "react";
-import {QuizContext} from "../contexts/QuizContextProvider.jsx";
-import QUESTIONS from "../questions.js";
-
-export default function Answer({answerText}) {
-  const {currentQuestion, userAnswers, state, selectAnswer} = useContext(QuizContext);
-  const [highlight, setHighlight] = useState(undefined);
+export default function Answer({answerText, answerState, onSelectAnswer, selectedAnswer}) {
+  const isSelected = answerText === selectedAnswer;
 
   function handleClick() {
-    if (userAnswers[currentQuestion] !== null || state !== 'not-selected') {
+    if (answerState !== '') {
       return; // question already answered
     }
-    setHighlight(null);
-    selectAnswer(answerText);
+    onSelectAnswer(answerText);
   }
 
-  useEffect(() => {
-    if (state === 'check-answer' && answerText === userAnswers[currentQuestion]) {
-      if (answerText === QUESTIONS[currentQuestion].answers[0]) {
-        setHighlight(true);
-      } else  {
-        setHighlight(false);
-      }
+  let cssClass = '';
+  if (isSelected) {
+    if (answerState === 'answered') {
+      cssClass = "selected";
+    } else if (answerState === 'correct' || answerState === 'wrong') {
+      cssClass = answerState;
     }
-  }, [state]);
-
-  let klass;
-  if (highlight === null) {
-    klass = "selected";
-  } else if (highlight === true){
-    klass = "correct";
-  } else if (highlight === false) {
-    klass = "wrong";
   }
 
   return (
     <li className="answer">
-      <button className={klass} onClick={handleClick}>{answerText}</button>
+      <button className={cssClass} onClick={handleClick} disabled={answerState !== ''}>{answerText}</button>
     </li>
   );
 }
